@@ -58,7 +58,11 @@ class GitlabConfig
       redis['host'] ||= '127.0.0.1'
       redis['port'] ||= '6379'
       if redis.has_key?("socket")
-        %W(#{redis['bin']} -s #{redis['socket']} -n #{redis['database']})
+        if redis.has_key?("pass")
+          %W(#{redis['bin']} -s #{redis['socket']} -n #{redis['database']} -a #{redis['pass']})
+        else
+          %W(#{redis['bin']} -s #{redis['socket']} -n #{redis['database']})
+        end
       else
         if redis.has_key?("pass")
           %W(#{redis['bin']} -h #{redis['host']} -p #{redis['port']} -n #{redis['database']} -a #{redis['pass']})
